@@ -1,6 +1,6 @@
 
 # Orbit Simulator
-This project aims to create an interactive simulation platform for orbital mechanics. This is an evolution of my last project related to orbital mechanics: [orbit_simulator repo](https://github.com/vuejs/vue)
+This project aims to create an interactive simulation platform for orbital mechanics. This is an evolution of my last project related to orbital mechanics: [orbit_simulator repo](https://github.com/GabrielSaraivaCesar/orbit_simulator)
 
 ## Measurement Units
 Planet mass: $kg$<br>

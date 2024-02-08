@@ -5,11 +5,12 @@ using UnityEngine;
 
 public class PhysicsUtils : MonoBehaviour
 {
-    public float BIG_G = 6.6743e-11f;
+    public static float BIG_G = 6.6743e-11f;
 
-    public Vector2 getGravityAcceleration(CelestialBodyScript fromBody, CelestialBodyScript toBody)
+    public static Vector2 getGravityAcceleration(CelestialBodyScript fromBody, CelestialBodyScript toBody)
     {
         float distance = getDistanceBetweenCoords(fromBody.metricPosition, toBody.metricPosition);
+
         float acceleration = (BIG_G * toBody.mass) / (float)Math.Pow(distance, 2);
         Vector2 speedDistribution = getSpeedDistribution(fromBody.metricPosition, toBody.metricPosition, distance);
         speedDistribution.x = speedDistribution.x * acceleration;
@@ -18,20 +19,20 @@ public class PhysicsUtils : MonoBehaviour
         return speedDistribution;
     }
 
-    public Vector2 getSpeedDistribution(Vector2 pos1, Vector2 pos2)
+    public static Vector2 getSpeedDistribution(Vector2 pos1, Vector2 pos2)
     {
         float distance = getDistanceBetweenCoords(pos1, pos2);
         return getSpeedDistribution(pos1, pos2, distance);
     }
-    public Vector2 getSpeedDistribution(Vector2 pos1, Vector2 pos2, float distance)
+    public static Vector2 getSpeedDistribution(Vector2 pos1, Vector2 pos2, float distance)
     {
         Vector2 speedDistribution = new Vector2();
-        speedDistribution.x = pos1.x / distance;
-        speedDistribution.y = pos1.y / distance;
+        speedDistribution.x = (pos1.x - pos2.x) / distance;
+        speedDistribution.y = (pos1.y - pos2.y) / distance;
         return speedDistribution;
     }
 
-    public float getDistanceBetweenCoords(Vector2 coord1, Vector2 coord2)
+    public static float getDistanceBetweenCoords(Vector2 coord1, Vector2 coord2)
     {
         return (float)Math.Sqrt(
             Math.Pow(

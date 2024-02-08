@@ -23,6 +23,8 @@ public class UIBehaviour : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 
     private Vector3? dragPositionLastFrame = null;
 
+    public static int timeWarp = 1000;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -77,6 +79,8 @@ public class UIBehaviour : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         {
             mouseDownTarget.SetActive(false);
             celestialBodyPreview = Instantiate(celestialBodyPrefab, UiPosToWorldPos(eventData.position), Quaternion.identity);
+            CelestialBodyScript cBodyScript = celestialBodyPreview.GetComponent<CelestialBodyScript>();
+            cBodyScript.isManuallyMoving = true;
         }
     }
     public void OnPointerUp(PointerEventData eventData)
@@ -97,7 +101,7 @@ public class UIBehaviour : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 
                 CelestialBodyScript cBodyScript = celestialBodyPreview.GetComponent<CelestialBodyScript>();
                 cBodyScript.calculateMetricPosition();
-
+                cBodyScript.isManuallyMoving = false;
                 mouseDownTarget.SetActive(true);
             }
         }

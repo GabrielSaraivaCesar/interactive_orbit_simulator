@@ -5,7 +5,7 @@ using UnityEngine;
 public class CameraBehaviour : MonoBehaviour
 {
 
-    public float unitsToMetersMultiplier = 1.2742e7f;
+    public float unitsToMetersMultiplier = 12_742_000.0f;
     public float zoomSpped = 1.2742e9f;
 
     public GameObject uiCanvas;
@@ -55,15 +55,12 @@ public class CameraBehaviour : MonoBehaviour
 
     private void fixBodiesPosition()
     {
-        GameObject[] celestialBodies = GameObject.FindGameObjectsWithTag("CelestialBody");
-
-        foreach (GameObject cBody in celestialBodies)
+        foreach (GameObject cBody in GameObjectListCache.CelestialBodies)
         {
             CelestialBodyScript bodyScript = cBody.GetComponent<CelestialBodyScript>();
             cBody.transform.position = metersToUnits(bodyScript.metricPosition);
             bodyScript.calculateScale();
         }
-
     }
 
     public float unitsToMeters(float units)

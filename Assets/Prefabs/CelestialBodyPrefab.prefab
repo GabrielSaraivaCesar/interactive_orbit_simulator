@@ -10,7 +10,7 @@ GameObject:
   m_Component:
   - component: {fileID: 812348032304536043}
   - component: {fileID: 4627275307605406418}
-  - component: {fileID: 8672009687939011}
+  - component: {fileID: -8575494660399636347}
   m_Layer: 0
   m_Name: CelestialBodyPrefab
   m_TagString: CelestialBody
@@ -27,7 +27,7 @@ Transform:
   m_GameObject: {fileID: 4434030689475780065}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -0.38, y: -1.62, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -85,7 +85,7 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &8672009687939011
+--- !u!114 &-8575494660399636347
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -98,4 +98,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   metricPosition: {x: 0, y: 0, z: 0}
-  diameterInMeters: 12742000
+  velocity: {x: 0, y: 0}
+  diameterInMeters: 6371000
+  mass: 5.9722e+24
+  isManuallyMoving: 1

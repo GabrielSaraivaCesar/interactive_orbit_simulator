@@ -1078,6 +1078,7 @@ MonoBehaviour:
   celestialBodyPrefab: {fileID: 4434030689475780065, guid: 641e7bbab93fec34996382b62fb1bfe2, type: 3}
   celestialBodyUIContainer: {fileID: 820882588}
   dialogueBalloonPrefab: {fileID: 3631750045396331577, guid: 8f4f9c4fe826aa84ca120955caa1f985, type: 3}
+  timeWarp: 1000
 --- !u!1 &1218431640
 GameObject:
   m_ObjectHideFlags: 0
@@ -1259,63 +1260,6 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!1001 &5523045273780540403
-PrefabInstance:
-  m_ObjectHideFlags: 0
-  serializedVersion: 2
-  m_Modification:
-    serializedVersion: 3
-    m_TransformParent: {fileID: 0}
-    m_Modifications:
-    - target: {fileID: 812348032304536043, guid: 641e7bbab93fec34996382b62fb1bfe2, type: 3}
-      propertyPath: m_LocalPosition.x
-      value: -1.487
-      objectReference: {fileID: 0}
-    - target: {fileID: 812348032304536043, guid: 641e7bbab93fec34996382b62fb1bfe2, type: 3}
-      propertyPath: m_LocalPosition.y
-      value: 0.492
-      objectReference: {fileID: 0}
-    - target: {fileID: 812348032304536043, guid: 641e7bbab93fec34996382b62fb1bfe2, type: 3}
-      propertyPath: m_LocalPosition.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 812348032304536043, guid: 641e7bbab93fec34996382b62fb1bfe2, type: 3}
-      propertyPath: m_LocalRotation.w
-      value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 812348032304536043, guid: 641e7bbab93fec34996382b62fb1bfe2, type: 3}
-      propertyPath: m_LocalRotation.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 812348032304536043, guid: 641e7bbab93fec34996382b62fb1bfe2, type: 3}
-      propertyPath: m_LocalRotation.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 812348032304536043, guid: 641e7bbab93fec34996382b62fb1bfe2, type: 3}
-      propertyPath: m_LocalRotation.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 812348032304536043, guid: 641e7bbab93fec34996382b62fb1bfe2, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.x
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 812348032304536043, guid: 641e7bbab93fec34996382b62fb1bfe2, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.y
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 812348032304536043, guid: 641e7bbab93fec34996382b62fb1bfe2, type: 3}
-      propertyPath: m_LocalEulerAnglesHint.z
-      value: 0
-      objectReference: {fileID: 0}
-    - target: {fileID: 4434030689475780065, guid: 641e7bbab93fec34996382b62fb1bfe2, type: 3}
-      propertyPath: m_Name
-      value: CelestialBodyPrefab
-      objectReference: {fileID: 0}
-    m_RemovedComponents: []
-    m_RemovedGameObjects: []
-    m_AddedGameObjects: []
-    m_AddedComponents: []
-  m_SourcePrefab: {fileID: 100100000, guid: 641e7bbab93fec34996382b62fb1bfe2, type: 3}
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
@@ -1324,5 +1268,4 @@ SceneRoots:
   - {fileID: 619394802}
   - {fileID: 444904131}
   - {fileID: 1091603772}
-  - {fileID: 5523045273780540403}
   - {fileID: 1933412691}

@@ -18,10 +18,6 @@ In a 2d matrix, celestial bodies have $x$ and $y$ coordinates. The formula obtai
 
 $\sqrt{|x_1-x_2|^{2}+|y_1-y_2|^{2}}$<br>
 
-And for a 3d matrix, you simply need to add the $z$ axis to the formula
-
-$\sqrt{|x_1-x_2|^{2}+|y_1-y_2|^{2}+|z_1-z_2|^{2}}$<br><br>
-
 ### Gravitational Acceleration
 To calculate the gravitational acceleration I decided to use Newton's universal gravitational law, since it's simpler and works well for the scenarios addressed by the simulator (Stars, planets, ships and natural or artificial satellites)
 
@@ -30,7 +26,8 @@ $M$ = Mass of the celestial bodies<br>
 $r$ = Distance between the celestial bodies<br><br>
 
 $F=G{M_1M_2\over r^2}$<br>
-Using that equation, and considering that $F=g*M$, we can also directly calculate $g$ by the following formula:
+<br>
+By using these equations and considering that $g={F\over M_2}$, we can also directly calculate $g$ by the following formula:
 
 $g={G{M_1M_2\over r^2}\over M_2}={G{M_1\cancel{M_2}\over r^2}\over \cancel{M_2}}=G{{M_1} \over r^{2}}={G\over 1}*{M_1\over r^2}$
 

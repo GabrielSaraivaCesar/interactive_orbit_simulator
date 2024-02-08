@@ -7,7 +7,8 @@ public class CelestialBodyScript : MonoBehaviour
     
     public Vector3 metricPosition;
     public float diameterInMeters = 12_742_000.0f;
-    
+    public float mass = 5.9722e24f;
+
     private Camera mainCam;
     private CameraBehaviour cameraBehaviour;
 
@@ -16,7 +17,8 @@ public class CelestialBodyScript : MonoBehaviour
     {
         mainCam = Camera.main;
         cameraBehaviour = mainCam.GetComponent<CameraBehaviour>();
-        calculateMetricPosition();
+        calculateMetricPosition
+            ();
         calculateScale();
     }
 

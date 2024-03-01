@@ -23,12 +23,13 @@ public class UIBehaviour : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 
     private Vector3? dragPositionLastFrame = null;
 
-    public static int timeWarp = 1000;
+    public GameObject playIcon;
+    public GameObject pauseIcon;
 
     // Start is called before the first frame update
     void Start()
     {
-        
+        onPlayPauseChange(); // Initiate display
     }
 
     // Update is called once per frame
@@ -41,8 +42,6 @@ public class UIBehaviour : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 
             celestialBodyPreview.transform.position = worldPosition;
         }
-
-        
 
         if (Input.GetKey(KeyCode.Mouse0) && mouseDownTarget == null && celestialBodyPreview == null)
         {
@@ -81,6 +80,10 @@ public class UIBehaviour : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
             celestialBodyPreview = Instantiate(celestialBodyPrefab, UiPosToWorldPos(eventData.position), Quaternion.identity);
             CelestialBodyScript cBodyScript = celestialBodyPreview.GetComponent<CelestialBodyScript>();
             cBodyScript.isManuallyMoving = true;
+        } else if (mouseDownTarget.name == "PlayPauseButton")
+        {
+            PhysicsUtils.isPaused = !PhysicsUtils.isPaused;
+            onPlayPauseChange();
         }
     }
     public void OnPointerUp(PointerEventData eventData)
@@ -156,5 +159,11 @@ public class UIBehaviour : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     private void destroyCelestialBodyContainerTooltip()
     {
         Destroy(dialogueBalloon);
+    }
+
+    private void onPlayPauseChange()
+    {
+        playIcon.SetActive(PhysicsUtils.isPaused);
+        pauseIcon.SetActive(!PhysicsUtils.isPaused);
     }
 }

@@ -60,6 +60,7 @@ public class CameraBehaviour : MonoBehaviour
             CelestialBodyScript bodyScript = cBody.GetComponent<CelestialBodyScript>();
             cBody.transform.position = metersToUnits(bodyScript.metricPosition);
             bodyScript.calculateScale();
+            bodyScript.calculateLineRendererPositions();
         }
     }
 

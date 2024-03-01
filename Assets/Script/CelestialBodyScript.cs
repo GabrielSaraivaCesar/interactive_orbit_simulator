@@ -13,8 +13,16 @@ public class CelestialBodyScript : MonoBehaviour
     private Camera mainCam;
     private CameraBehaviour cameraBehaviour;
     
-
     public bool isManuallyMoving = true;
+    private SpriteRenderer spriteRenderer;
+
+    private float positionsLogTimer = 0.0f;
+    private float positionsLogUpdateRate = 0.5f;
+    private int positionsLogLimit = 120;
+    private List<Vector3> positionsLog = new List<Vector3>();
+    
+    private LineRenderer lineRenderer;
+    private float lineRendererDefaultWidth;
 
     // Start is called before the first frame update
     void Start()
@@ -23,6 +31,13 @@ public class CelestialBodyScript : MonoBehaviour
 
         mainCam = Camera.main;
         cameraBehaviour = mainCam.GetComponent<CameraBehaviour>();
+        spriteRenderer = gameObject.GetComponent<SpriteRenderer>();
+        lineRenderer = gameObject.GetComponent<LineRenderer>();
+
+        spriteRenderer.color = GameObjectListCache.getRandomCelestialBodyColor();
+        lineRenderer.startColor = spriteRenderer.color;
+        lineRenderer.endColor = spriteRenderer.color;
+        lineRendererDefaultWidth = lineRenderer.endWidth;
 
         calculateMetricPosition();
         calculateScale();
@@ -31,7 +46,7 @@ public class CelestialBodyScript : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        if (!isManuallyMoving)
+        if (!isManuallyMoving && !PhysicsUtils.isPaused)
         {
             foreach (GameObject cBody in GameObjectListCache.CelestialBodies)
             {
@@ -42,9 +57,34 @@ public class CelestialBodyScript : MonoBehaviour
                     continue;
                 }
                 accelerateToBody(bodyScript);
+                positionsLogTimer += Time.deltaTime;
+                if (positionsLogTimer >= positionsLogUpdateRate)
+                {
+                    positionsLog.Add(metricPosition);
+                    if (positionsLog.Count > positionsLogLimit) { 
+                        positionsLog.RemoveAt(0);
+                    }
+                    lineRenderer.positionCount = positionsLog.Count;
+                    calculateLineRendererPositions();
+                    positionsLogTimer = 0.0f;
+                }
+
             }
             moveToByCurrentVelocity();
         }
+    }
+
+    public void calculateLineRendererPositions()
+    {
+        Vector3[] array = new Vector3[positionsLog.Count];
+        for (int i = 0; i < positionsLog.Count; i++)
+        {
+            // Perform the transformation here; in this case, adding 1
+            array[i] = cameraBehaviour.metersToUnits(positionsLog[i]);
+            array[i].z = 10f;
+        }
+
+        lineRenderer.SetPositions(array);
     }
 
     public void calculateMetricPosition()
@@ -56,13 +96,14 @@ public class CelestialBodyScript : MonoBehaviour
     {
         float newScale = diameterInMeters / cameraBehaviour.unitsToMetersMultiplier;
         gameObject.transform.localScale = new Vector3(newScale, newScale);
+        lineRenderer.endWidth = newScale * lineRendererDefaultWidth;
     }
 
     private void accelerateToBody(CelestialBodyScript targetBody)
     {
         Vector2 acceleration = PhysicsUtils.getGravityAcceleration(this, targetBody);
-        acceleration.x = acceleration.x * Time.deltaTime * UIBehaviour.timeWarp;
-        acceleration.y = acceleration.y * Time.deltaTime * UIBehaviour.timeWarp;
+        acceleration.x = acceleration.x * Time.deltaTime * PhysicsUtils.timeWarp;
+        acceleration.y = acceleration.y * Time.deltaTime * PhysicsUtils.timeWarp;
 
         velocity.x -= acceleration.x;
         velocity.y -= acceleration.y;
@@ -70,8 +111,8 @@ public class CelestialBodyScript : MonoBehaviour
 
     private void moveToByCurrentVelocity()
     {
-        metricPosition.x += velocity.x * Time.deltaTime * UIBehaviour.timeWarp;
-        metricPosition.y += velocity.y * Time.deltaTime * UIBehaviour.timeWarp;
+        metricPosition.x += velocity.x * Time.deltaTime * PhysicsUtils.timeWarp;
+        metricPosition.y += velocity.y * Time.deltaTime * PhysicsUtils.timeWarp;
         transform.position = cameraBehaviour.metersToUnits(metricPosition);
     }
 }

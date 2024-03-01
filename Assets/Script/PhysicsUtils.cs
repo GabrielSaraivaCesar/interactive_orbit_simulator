@@ -6,10 +6,18 @@ using UnityEngine;
 public class PhysicsUtils : MonoBehaviour
 {
     public static float BIG_G = 6.6743e-11f;
+    public static int timeWarp = 1000;
+    public static bool isPaused = true;
 
     public static Vector2 getGravityAcceleration(CelestialBodyScript fromBody, CelestialBodyScript toBody)
     {
         float distance = getDistanceBetweenCoords(fromBody.metricPosition, toBody.metricPosition);
+        float minDistance = (fromBody.diameterInMeters + toBody.diameterInMeters) / 2; // Min cap distance based on the radius
+
+        if (distance < minDistance) 
+        {
+            distance = minDistance;
+        }
 
         float acceleration = (BIG_G * toBody.mass) / (float)Math.Pow(distance, 2);
         Vector2 speedDistribution = getSpeedDistribution(fromBody.metricPosition, toBody.metricPosition, distance);

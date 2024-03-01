@@ -24,6 +24,8 @@ public class CelestialBodyScript : MonoBehaviour
     private LineRenderer lineRenderer;
     private float lineRendererDefaultWidth;
 
+    public GameObject SelectedIndicator;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -38,6 +40,8 @@ public class CelestialBodyScript : MonoBehaviour
         lineRenderer.startColor = spriteRenderer.color;
         lineRenderer.endColor = spriteRenderer.color;
         lineRendererDefaultWidth = lineRenderer.endWidth;
+
+        SelectedIndicator.SetActive(false);
 
         calculateMetricPosition();
         calculateScale();

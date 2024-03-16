@@ -38,27 +38,6 @@ public class UIBehaviour : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     void Start()
     {
         onPlayPauseChange(); // Initiate display
-
-        int x = 0;
-        int y = 0;
-        for (float i = 0; i < 300; i++)
-        {
-            if (i % 10 == 0)
-            {
-                y += 1;
-                x = 0;
-            } else
-            {
-                x += 1;
-            }
-            Vector3 pos = Vector3.zero;
-            pos.x = x + mainCamera.transform.position.x;
-            pos.y = y + mainCamera.transform.position.y;
-
-            GameObject cBody = Instantiate(celestialBodyPrefab, pos, Quaternion.identity);
-            CelestialBodyScript script = cBody.GetComponent<CelestialBodyScript>();
-            script.isManuallyMoving = false;
-        }
     }
 
     // Update is called once per frame
@@ -171,6 +150,31 @@ public class UIBehaviour : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         if (!Input.GetKey(KeyCode.Mouse0) && lastClickTime != -1)
         {
             lastClickTime = -1;
+        }
+    }
+
+    private void loadTestSubjects()
+    {
+        int x = 0;
+        int y = 0;
+        for (float i = 0; i < 225; i++)
+        {
+            if (i % Math.Sqrt(225) == 0)
+            {
+                y += 1;
+                x = 0;
+            }
+            else
+            {
+                x += 1;
+            }
+            Vector3 pos = Vector3.zero;
+            pos.x = x + mainCamera.transform.position.x;
+            pos.y = y + mainCamera.transform.position.y;
+
+            GameObject cBody = Instantiate(celestialBodyPrefab, pos, Quaternion.identity);
+            CelestialBodyScript script = cBody.GetComponent<CelestialBodyScript>();
+            script.isManuallyMoving = false;
         }
     }
 

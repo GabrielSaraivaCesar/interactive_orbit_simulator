@@ -26,7 +26,7 @@ public class CameraBehaviour : MonoBehaviour
 
     private void onScroll()
     {
-        Vector3 mousePos = uiBehaviour.UiPosToWorldPos(Input.mousePosition);
+        Vector3 mousePos = UIUnitsConverter.UiPosToWorldPos(Input.mousePosition);
         Vector3 mouseMetricPos = unitsToMeters(mousePos);
         float delta = (Input.mouseScrollDelta.y * -1 * zoomSpped) * Time.deltaTime;
         unitsToMetersMultiplier += delta;

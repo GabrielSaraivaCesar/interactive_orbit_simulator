@@ -37,8 +37,9 @@ public class CelestialBodyScript : MonoBehaviour
         lineRenderer = gameObject.GetComponent<LineRenderer>();
 
         spriteRenderer.color = GameObjectListCache.getRandomCelestialBodyColor();
-        lineRenderer.startColor = spriteRenderer.color;
-        lineRenderer.endColor = spriteRenderer.color;
+        Color darkerColor = Color.Lerp(spriteRenderer.color, Color.black, 0.2f);
+        lineRenderer.endColor = darkerColor;
+        lineRenderer.startColor = mainCam.backgroundColor;
         lineRendererDefaultWidth = lineRenderer.endWidth;
 
         SelectedIndicator.SetActive(false);

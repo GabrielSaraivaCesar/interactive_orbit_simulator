@@ -76,7 +76,6 @@ public static class UIBodySelection
         RaycastHit2D[] worldHits = UIUnitsConverter.raycastMousePos();
         foreach (RaycastHit2D hit in worldHits)
         {
-            Debug.Log(hit.collider.gameObject.name);
             if (hit.collider.gameObject.tag == "ArrowIndicator") 
             {
                 return;

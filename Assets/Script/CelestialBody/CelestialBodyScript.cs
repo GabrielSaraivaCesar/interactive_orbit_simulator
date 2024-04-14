@@ -25,6 +25,13 @@ public class CelestialBodyScript : MonoBehaviour
     private float lineRendererDefaultWidth;
 
     public GameObject SelectedIndicator;
+    public GameObject DirectionArrow;
+    public GameObject DirectionArrowAxis;
+    public Renderer DirectionArrowAxisRenderer;
+    public BoxCollider2D DirectionArrowBoxCollider;
+    private CelestialBodyArrowIndicator celestialBodyArrowIndicator;
+
+    public bool isSelected;
 
     // Start is called before the first frame update
     void Start()
@@ -42,8 +49,14 @@ public class CelestialBodyScript : MonoBehaviour
         lineRenderer.startColor = mainCam.backgroundColor;
         lineRendererDefaultWidth = lineRenderer.endWidth;
 
-        SelectedIndicator.SetActive(false);
 
+        SelectedIndicator.SetActive(false);
+        DirectionArrowAxisRenderer = DirectionArrow.GetComponent<Renderer>();
+        DirectionArrowBoxCollider = DirectionArrow.GetComponent<BoxCollider2D>();
+        DirectionArrowAxisRenderer.enabled = false;
+        DirectionArrowBoxCollider.enabled = false;
+
+        celestialBodyArrowIndicator = DirectionArrow.GetComponent<CelestialBodyArrowIndicator>();
         calculateMetricPosition();
         calculateScale();
     }
@@ -76,6 +89,10 @@ public class CelestialBodyScript : MonoBehaviour
 
             }
             moveToByCurrentVelocity();
+            if (isSelected)
+            {
+                celestialBodyArrowIndicator.updateRotation(velocity);
+            }
         }
     }
 

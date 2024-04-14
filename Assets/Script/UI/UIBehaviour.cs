@@ -23,7 +23,6 @@ public class UIBehaviour : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     private GameObject dialogueBalloon;
     private bool isHoveringCelestialBodyUIContainer = false;
 
-
     public GameObject playIcon;
     public GameObject pauseIcon;
 
@@ -34,7 +33,6 @@ public class UIBehaviour : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     // Start is called before the first frame update
     void Start()
     {
-
         onPlayPauseChange(); // Initiate display
 
         FPSIndicator.setUp(fpsText);
@@ -63,14 +61,17 @@ public class UIBehaviour : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         if (Input.GetKey(KeyCode.Mouse0) && mouseDownUITarget == null && celestialBodyPreview == null) // Clicking in the game world, not on UI elements
         {
             UIBodySelection.onWorldClick();
+            CameraDrag.onWorldClick();
+            CelestialBodyArrowIndicator.onWorldClick();
 
         } else  // Stopped dragging
         {
-            UIBodySelection.stopDragging();
+            CameraDrag.stopDragging();
         }
         if (!Input.GetKey(KeyCode.Mouse0) && mouseDownUITarget == null && lastClickTime != -1) // Mouse release after clicking a celestial body
         {
             UIBodySelection.onWorldClickRelease();
+            CelestialBodyArrowIndicator.onWorldRelease();
         }
 
         if (!Input.GetKey(KeyCode.Mouse0) && lastClickTime != -1)
@@ -120,6 +121,7 @@ public class UIBehaviour : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
             onPlayPauseChange();
         }
     }
+
     public void OnPointerUp(PointerEventData eventData)
     {
         if (eventData.pointerCurrentRaycast.gameObject == mouseDownUITarget)

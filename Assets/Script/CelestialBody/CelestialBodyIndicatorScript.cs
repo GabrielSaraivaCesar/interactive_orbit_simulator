@@ -8,10 +8,6 @@ public class CelestialBodyIndicatorScript : MonoBehaviour
     public float animationSpeed = 0.04f; // Time in seconds between frames
     private SpriteRenderer spriteRenderer;
 
-    // Start is called before the first frame update
-    void Start()
-    {
-    }
 
     public void runAnimation()
     {

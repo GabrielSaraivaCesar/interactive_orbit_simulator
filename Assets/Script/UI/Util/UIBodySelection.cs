@@ -4,7 +4,6 @@ using UnityEngine;
 
 public static class UIBodySelection
 {
-    private static Vector3? _dragPositionLastFrame = null;
     private static float _bodyPreSelectionTime;
     private static GameObject _bodyPreSelection;
     private static GameObject _selectedBody;
@@ -13,30 +12,13 @@ public static class UIBodySelection
 
     public static void onWorldClick()
     {
+        if (_lastClickTime != -1) return; // Wait for the release to trigger the click again
         _lastClickTime = Time.time;
-        Vector3 currentPos = UIUnitsConverter.UiPosToWorldPos(Input.mousePosition);
-        if (_dragPositionLastFrame != null)
-        {
-            Vector3 lastPositionW = UIUnitsConverter.UiPosToWorldPos(_dragPositionLastFrame ?? Vector3.zero);
-            Vector3 positionDiff = new Vector3(
-                    currentPos.x - lastPositionW.x,
-                    currentPos.y - lastPositionW.y,
-                    currentPos.z - lastPositionW.z
-            );
-
-            float deltaTime = Time.deltaTime;
-            UIUnitsConverter.mainCamera.transform.position = new Vector3(
-                UIUnitsConverter.mainCamera.transform.position.x - positionDiff.x,
-                UIUnitsConverter.mainCamera.transform.position.y - positionDiff.y,
-                UIUnitsConverter.mainCamera.transform.position.z - positionDiff.z
-                );
-        }
-        _dragPositionLastFrame = Input.mousePosition;
+        
 
         if (_bodyPreSelection == null)
         {
             RaycastHit2D[] worldHits = UIUnitsConverter.raycastMousePos();
-
             // Check if the raycast hit anything
             if (worldHits.Length > 0)
             {
@@ -47,6 +29,10 @@ public static class UIBodySelection
                     int index = 0;
                     foreach (RaycastHit2D hit in worldHits)
                     {
+                        if (hit.collider.gameObject.tag == "ArrowIndicator")
+                        {
+                            return; // Ignore click
+                        }
                         if (hit.collider.gameObject == _selectedBody)
                         {
                             selectedIndex = index;
@@ -80,16 +66,32 @@ public static class UIBodySelection
 
     public static void onWorldClickRelease()
     {
-        if (_selectedBody != null && Time.time - _lastClickTime < 0.15)
+        if (Time.time - _lastClickTime >= 0.15) // Not a valid click, considered a drag
         {
-            RaycastHit2D[] worldHits = UIUnitsConverter.raycastMousePos();
-            if (worldHits.Length == 0)
+            _lastClickTime = -1;
+            return;
+        }
+        _lastClickTime = -1;
+
+        RaycastHit2D[] worldHits = UIUnitsConverter.raycastMousePos();
+        foreach (RaycastHit2D hit in worldHits)
+        {
+            Debug.Log(hit.collider.gameObject.name);
+            if (hit.collider.gameObject.tag == "ArrowIndicator") 
+            {
+                return;
+            } 
+        }
+        if (worldHits.Length == 0)
+        {
+            if (_selectedBody != null)
             {
                 _clearBodySelection();
             }
             return;
         }
         if (_bodyPreSelection == null) return; // No body is being selected, stop method execution
+
 
         RaycastHit2D[] hits = UIUnitsConverter.raycastMousePos();
         foreach (RaycastHit2D hit in hits)
@@ -101,15 +103,6 @@ public static class UIBodySelection
             }
         }
         _clearPreSelectBody();
-        _lastClickTime = -1;
-    }
-
-    public static void stopDragging()
-    {
-        if (_dragPositionLastFrame != null)
-        {
-            _dragPositionLastFrame = null;
-        }
     }
 
     private static void _preSelectBody(GameObject celestialBody)
@@ -131,6 +124,9 @@ public static class UIBodySelection
         _selectedBody = celestialBody;
         _selectedBodyScript = celestialBody.GetComponent<CelestialBodyScript>();
         _selectedBodyScript.SelectedIndicator.SetActive(true);
+        _selectedBodyScript.DirectionArrowAxisRenderer.enabled = true;
+        _selectedBodyScript.DirectionArrowBoxCollider.enabled = true;
+        _selectedBodyScript.isSelected = true;
         _selectedBodyScript.SelectedIndicator.GetComponent<CelestialBodyIndicatorScript>().runAnimation();
         _bodyPreSelectionTime = 0;
         _selectedBody.GetComponent<SpriteRenderer>().sortingOrder = 3;
@@ -142,6 +138,9 @@ public static class UIBodySelection
         _selectedBody.GetComponent<SpriteRenderer>().sortingOrder = 1;
         _selectedBodyScript.SelectedIndicator.GetComponent<SpriteRenderer>().sortingOrder = 0;
         _selectedBodyScript.SelectedIndicator.SetActive(false);
+        _selectedBodyScript.DirectionArrowAxisRenderer.enabled = false;
+        _selectedBodyScript.DirectionArrowBoxCollider.enabled = false;
+        _selectedBodyScript.isSelected = false;
         _selectedBodyScript = null;
         _selectedBody = null;
     }

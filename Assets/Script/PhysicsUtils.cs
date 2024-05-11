@@ -6,7 +6,7 @@ using UnityEngine;
 public class PhysicsUtils : MonoBehaviour
 {
     public static float BIG_G = 6.6743e-11f;
-    public static int timeWarp = 1000;
+    public static int timeWarp = 1;
     public static bool isPaused = true;
 
     public static Vector2 getGravityAcceleration(CelestialBodyScript fromBody, CelestialBodyScript toBody)

@@ -9,6 +9,7 @@ public class CelestialBodyArrowIndicator : MonoBehaviour
     public GameObject celestialBodyElement;
     public GameObject axisElement;
 
+    private static CelestialBodyScript celestialBodyScript;
     private static GameObject draggingTarget;
     private static Vector2 lastMousePosition;
 
@@ -49,27 +50,61 @@ public class CelestialBodyArrowIndicator : MonoBehaviour
         lastMousePosition = currentMousePosition;
     }
 
+    private static void dragCBody()
+    {
+
+        Vector2 currentMousePosition = Input.mousePosition;
+        Vector3 wPos = UIUnitsConverter.UiPosToWorldPos(currentMousePosition);
+        draggingTarget.transform.position = wPos;
+        celestialBodyScript.calculateMetricPosition();
+    }
+
+
     public static void onWorldClick()
     {
         if (draggingTarget != null)
         {
-            onDragArrow();
+            if (draggingTarget.tag == "ArrowIndicator")
+            {
+                onDragArrow();
+            } else if (draggingTarget.tag == "CelestialBody")
+            {
+                dragCBody();
+            }
+            return;
         }
 
         RaycastHit2D[] worldHits = UIUnitsConverter.raycastMousePos();
         GameObject arrowHit = null;
+        GameObject celestialBodyHit = null;
+        CelestialBodyScript celestialBodyHitScript = null;
         foreach (RaycastHit2D hit in worldHits)
         {
             if (hit.collider == null) continue;
             if (hit.collider.gameObject.tag == "ArrowIndicator")
             {
                 arrowHit = hit.collider.gameObject;
-                break;
+            } else if (hit.collider.gameObject.tag == "CelestialBody")
+            {
+                CelestialBodyScript _celestialBodyHitScript = hit.collider.gameObject.GetComponent<CelestialBodyScript>();
+                if (_celestialBodyHitScript.isSelected)
+                {
+                    celestialBodyHit = hit.collider.gameObject;
+                    celestialBodyHitScript = _celestialBodyHitScript;
+                }
             }
         }
+
         if (arrowHit != null)
         {
             draggingTarget = arrowHit;
+            lastMousePosition = Input.mousePosition;
+            CameraDrag.disableDragging();
+        } else if (celestialBodyHit != null)
+        {
+            celestialBodyScript = celestialBodyHitScript;
+            celestialBodyScript.isManuallyMoving = true;
+            draggingTarget = celestialBodyHit;
             lastMousePosition = Input.mousePosition;
             CameraDrag.disableDragging();
         }
@@ -79,6 +114,11 @@ public class CelestialBodyArrowIndicator : MonoBehaviour
     {
         if (draggingTarget != null)
         {
+            if (celestialBodyScript != null)
+            {
+                celestialBodyScript.isManuallyMoving = false;
+                celestialBodyScript = null;
+            }
             draggingTarget = null;
             CameraDrag.enableDragging();
         }

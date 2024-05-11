@@ -30,6 +30,11 @@ public class UIBehaviour : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 
     public GameObject fpsText;
 
+    public GameObject accelerationText;
+    public GameObject[] accelerationButtons;
+    public Sprite selectedTimeWarpSprite;
+    public Sprite unselectedTimeWarpSprite;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -119,6 +124,63 @@ public class UIBehaviour : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         {
             PhysicsUtils.isPaused = !PhysicsUtils.isPaused;
             onPlayPauseChange();
+        } else if (mouseDownUITarget.name == "accl_1")
+        {
+            int newTimeWarp = 1;
+            updateTimeWarpImages(0);
+            updateTimeWarpValue(newTimeWarp);
+        }
+        else if (mouseDownUITarget.name == "accl_2")
+        {
+            int newTimeWarp = 4;
+            updateTimeWarpImages(1);
+            updateTimeWarpValue(newTimeWarp);
+        }
+        else if (mouseDownUITarget.name == "accl_3")
+        {
+            int newTimeWarp = 16;
+            updateTimeWarpImages(2);
+            updateTimeWarpValue(newTimeWarp);
+        }
+        else if (mouseDownUITarget.name == "accl_4")
+        {
+            int newTimeWarp = 256;
+            updateTimeWarpImages(3);
+            updateTimeWarpValue(newTimeWarp);
+        }
+        else if (mouseDownUITarget.name == "accl_5")
+        {
+            int newTimeWarp = 1000;
+            updateTimeWarpImages(4);
+            updateTimeWarpValue(newTimeWarp);
+        }
+        else if (mouseDownUITarget.name == "accl_6")
+        {
+            int newTimeWarp = 2000;
+            updateTimeWarpImages(5);
+            updateTimeWarpValue(newTimeWarp);
+        }
+    }
+
+    private void updateTimeWarpValue(int value)
+    {
+        accelerationText.GetComponent<TextMeshProUGUI>().text = value.ToString()+"x";
+        PhysicsUtils.timeWarp = value;
+    } 
+    private void updateTimeWarpImages(int selectedIndex)
+    {
+        int i = 0;
+        foreach (GameObject o in accelerationButtons)
+        {
+            Image img = o.GetComponent<Image>();
+            if (i <= selectedIndex)
+            {
+                img.sprite = selectedTimeWarpSprite;
+            } else
+            {
+                img.sprite = unselectedTimeWarpSprite;
+            }
+            i++;
         }
     }
 

@@ -46,7 +46,7 @@ public class UIBehaviour : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     {
         onPlayPauseChange(); // Initiate display
 
-        FPSIndicator.setUp(fpsText);
+        //FPSIndicator.setUp(fpsText);
         UIUnitsConverter.setUp(mainCamera);
         UIBodySelection.setUp(massInput, massUnitInput, speedInput, speedUnitInput, celestialBodyInputsContainer);
     }
@@ -54,7 +54,7 @@ public class UIBehaviour : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     // Update is called once per frame
     void Update()
     {
-        FPSIndicator.updateFPS();
+        //FPSIndicator.updateFPS();
 
         if (Input.GetKey(KeyCode.Mouse0) && lastClickTime == -1)
         {

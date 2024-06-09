@@ -228,7 +228,7 @@ public static class UIBodySelection
         {
             if (_selectedBody != null)
             {
-                _clearBodySelection();
+                clearBodySelection();
             }
             return;
         }
@@ -261,7 +261,7 @@ public static class UIBodySelection
     {
         if (_selectedBody != null)
         {
-            _clearBodySelection();
+            clearBodySelection();
         }
         _selectedBody = celestialBody;
         _selectedBodyScript = celestialBody.GetComponent<CelestialBodyScript>();
@@ -282,9 +282,12 @@ public static class UIBodySelection
         _selectedBodyScript.SelectedIndicator.GetComponent<SpriteRenderer>().sortingOrder = 2;
         _celestialBodyInputsContainer.SetActive(true);
         fillCelestialBodyInputs();
+        
+        GameObject delButtonTip = GameObjectListCache.FindInactiveObjectByName("CommandTips", "DelButtonTip");
+        delButtonTip.SetActive(true);
     }
 
-    private static void _clearBodySelection()
+    public static void clearBodySelection()
     {
         _selectedBody.GetComponent<SpriteRenderer>().sortingOrder = 1;
         _selectedBodyScript.SelectedIndicator.GetComponent<SpriteRenderer>().sortingOrder = 0;
@@ -295,6 +298,9 @@ public static class UIBodySelection
         _selectedBodyScript = null;
         _selectedBody = null;
         _celestialBodyInputsContainer.SetActive(false);
+
+        GameObject delButtonTip = GameObjectListCache.FindInactiveObjectByName("CommandTips", "DelButtonTip");
+        delButtonTip.SetActive(false);
     }
 
 

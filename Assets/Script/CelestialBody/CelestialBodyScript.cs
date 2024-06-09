@@ -101,6 +101,7 @@ public class CelestialBodyScript : MonoBehaviour
 
         if (isSelected && Input.GetKeyDown(KeyCode.Delete))
         {
+            UIBodySelection.clearBodySelection();
             GameObjectListCache.removeCelestialBodyFromCacheList(gameObject);
             Destroy(gameObject);
         }

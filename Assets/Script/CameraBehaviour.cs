@@ -5,8 +5,8 @@ using UnityEngine;
 public class CameraBehaviour : MonoBehaviour
 {
 
-    public float unitsToMetersMultiplier = 12_742_000.0f;
-    public float zoomSpped = 1.2742e9f;
+    public float unitsToMetersMultiplier = 1.2742e+07f;
+    public float zoomSpped = 1.2742e+07f;
 
     public GameObject uiCanvas;
     private UIBehaviour uiBehaviour;
@@ -28,7 +28,7 @@ public class CameraBehaviour : MonoBehaviour
     {
         Vector3 mousePos = UIUnitsConverter.UiPosToWorldPos(Input.mousePosition);
         Vector3 mouseMetricPos = unitsToMeters(mousePos);
-        float delta = (Input.mouseScrollDelta.y * -1 * zoomSpped * (unitsToMetersMultiplier / 12_742_000.0f / 5)) * Time.deltaTime;
+        float delta = (Input.mouseScrollDelta.y * -1 * zoomSpped * (unitsToMetersMultiplier / 12_742_000.0f / 5));
         
         unitsToMetersMultiplier += delta;
         if (unitsToMetersMultiplier < 2000000)

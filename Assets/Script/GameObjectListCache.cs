@@ -12,6 +12,11 @@ public class GameObjectListCache : MonoBehaviour
         CelestialBodies.Add(celestialBody);
     }
 
+    public static void removeCelestialBodyFromCacheList(GameObject celestialBody)
+    {
+        CelestialBodies.Remove(celestialBody);
+    }
+
     public static Color getRandomCelestialBodyColor()
     {
         float red = 0.5f + Random.Range(0f, 0.5f);

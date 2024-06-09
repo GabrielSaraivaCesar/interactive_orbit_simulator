@@ -17,8 +17,8 @@ public class CelestialBodyScript : MonoBehaviour
     private SpriteRenderer spriteRenderer;
 
     private float positionsLogTimer = 0.0f;
-    private float positionsLogUpdateRate = 0.5f;
-    private int positionsLogLimit = 120;
+    private float positionsLogUpdateRate = 0.1f;
+    private int positionsLogLimit = 200;
     private List<Vector3> positionsLog = new List<Vector3>();
     
     private LineRenderer lineRenderer;
@@ -75,24 +75,34 @@ public class CelestialBodyScript : MonoBehaviour
                     continue;
                 }
                 accelerateToBody(bodyScript);
-                positionsLogTimer += Time.deltaTime;
-                if (positionsLogTimer >= positionsLogUpdateRate)
-                {
-                    positionsLog.Add(metricPosition);
-                    if (positionsLog.Count > positionsLogLimit) { 
-                        positionsLog.RemoveAt(0);
-                    }
-                    lineRenderer.positionCount = positionsLog.Count;
-                    calculateLineRendererPositions();
-                    positionsLogTimer = 0.0f;
-                }
 
             }
             moveToByCurrentVelocity();
             if (isSelected)
             {
                 celestialBodyArrowIndicator.updateRotation(velocity);
+                UIBodySelection.updateSelectedCelestialBodySpeed();
             }
+
+
+            positionsLogTimer += Time.deltaTime;
+            if (positionsLogTimer >= positionsLogUpdateRate)
+            {
+                positionsLog.Add(metricPosition);
+                if (positionsLog.Count > positionsLogLimit)
+                {
+                    positionsLog.RemoveAt(0);
+                }
+                lineRenderer.positionCount = positionsLog.Count;
+                calculateLineRendererPositions();
+                positionsLogTimer = 0.0f;
+            }
+        }
+
+        if (isSelected && Input.GetKeyDown(KeyCode.Delete))
+        {
+            GameObjectListCache.removeCelestialBodyFromCacheList(gameObject);
+            Destroy(gameObject);
         }
     }
 
@@ -116,7 +126,27 @@ public class CelestialBodyScript : MonoBehaviour
 
     public void calculateScale()
     {
+        float ScaleFactor = 109 / (PhysicsUtils.sunMass / PhysicsUtils.earthMass);
+        float scale = (mass / PhysicsUtils.earthMass) * ScaleFactor;
+
+        // Constrain scale to be within the specified range
+        if (scale < 0.2)
+        {
+            scale = 0.2f;
+        }
+        else if (scale > 109)
+        {
+            scale = 109;
+        }
+
+        diameterInMeters = (12_742_000.0f) * scale;
         float newScale = diameterInMeters / cameraBehaviour.unitsToMetersMultiplier;
+        
+
+        
+        if (newScale <= 0.2f) { 
+            newScale = 0.2f;
+        }
         gameObject.transform.localScale = new Vector3(newScale, newScale);
         lineRenderer.endWidth = newScale * lineRendererDefaultWidth;
     }

@@ -1,6 +1,11 @@
 using System.Collections;
 using System.Collections.Generic;
+using TMPro;
+using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.UI;
+using UnityEngine.XR;
 
 public static class UIBodySelection
 {
@@ -10,11 +15,142 @@ public static class UIBodySelection
     private static CelestialBodyScript _selectedBodyScript;
     private static float _lastClickTime = -1;
 
+    private static TMP_InputField _massInput;
+    private static TMP_Dropdown _massUnitInput;
+    private static TMP_InputField _speedInput;
+    private static TMP_Dropdown _speedUnitInput;
+    private static GameObject _celestialBodyInputsContainer;
+
+    private static bool _shouldIgnoreWorldClicks = false;
+
+    public static void setUp(TMP_InputField massInput, TMP_Dropdown massUnitInput, TMP_InputField speedInput, TMP_Dropdown speedUnitInput, GameObject celestialBodyInputsContainer)
+    {
+        _massInput = massInput;
+        _massUnitInput = massUnitInput;
+        _speedInput = speedInput;
+        _speedUnitInput = speedUnitInput;
+        _celestialBodyInputsContainer = celestialBodyInputsContainer;
+
+
+        _massInput.onValueChanged.AddListener(OnChangeMassInput);
+        _massUnitInput.onValueChanged.AddListener(OnChangeMassUnitInput);
+        _massInput.onSelect.AddListener(onInputSelect);
+
+        _speedInput.onSelect.AddListener(onInputSelect);
+        _speedInput.onValueChanged.AddListener(OnChangeSpeedInput);
+        _speedUnitInput.onValueChanged.AddListener(OnChangeSpeedUnitInput);
+    }
+
+    private static void fillCelestialBodyInputs()
+    {
+        OnChangeMassUnitInput(_massUnitInput.value);
+        OnChangeSpeedUnitInput(_speedUnitInput.value);
+    }
+
+    private static void onInputSelect(string v)
+    {
+        _shouldIgnoreWorldClicks = true;
+    }
+
+
+    private static void OnChangeMassInput(string value)
+    {
+        if (float.TryParse(value, out float floatValue))
+        {
+            // Units: [0-Terra] [1-Lua] [2-Sol] [3-Kg]
+            float kgValue = floatValue;
+            if (_massUnitInput.value == 0)
+            {
+                kgValue = PhysicsUtils.earthMass * kgValue;
+            } else if (_massUnitInput.value == 1)
+            {
+                kgValue = PhysicsUtils.moonMass * kgValue;
+            } else if (_massUnitInput.value == 2)
+            {
+                kgValue = PhysicsUtils.sunMass * kgValue;
+            }
+            _selectedBodyScript.mass = kgValue;
+            _selectedBodyScript.calculateScale();
+        }
+    }
+
+    private static void OnChangeMassUnitInput(int value)
+    {
+        // Units: [0-Terra] [1-Lua] [2-Sol] [3-Kg]
+        float unitValue = value;
+        float newInputValue = _selectedBodyScript.mass;
+        if (unitValue == 0)
+        {
+            newInputValue = newInputValue / PhysicsUtils.earthMass;
+        } else if (unitValue == 1)
+        {
+            newInputValue = newInputValue / PhysicsUtils.moonMass;
+        } else if (unitValue == 2)
+        {
+            newInputValue = newInputValue / PhysicsUtils.sunMass;
+        }
+
+        _massInput.text = newInputValue.ToString();
+    }
+
+    private static void OnChangeSpeedInput(string value)
+    {
+        if (float.TryParse(value, out float floatValue))
+        {
+            // Units: [0-km/h] [1-m/s]
+            float speedValue = floatValue;
+            Vector2 newVelocity = _selectedBodyScript.velocity;
+            if (_speedUnitInput.value == 0)
+            {
+                if (newVelocity != Vector2.zero)
+                {
+                    newVelocity = newVelocity.normalized * (speedValue * 1000 / 3600);
+                } else
+                {
+                    newVelocity.x = speedValue;
+                }
+            } else
+            {
+                if (newVelocity != Vector2.zero)
+                {
+                    newVelocity = newVelocity.normalized * speedValue;
+                }
+                else
+                {
+                    newVelocity.x = speedValue;
+                }
+            }
+            _selectedBodyScript.velocity = newVelocity;
+            _selectedBodyScript.DirectionArrow.SetActive(floatValue > 0);
+
+        }
+    }
+
+
+    private static void OnChangeSpeedUnitInput(int value)
+    {
+        // Units: [0-km/h] [1-m/s]
+        float unitValue = value;
+        float newInputValue = _selectedBodyScript.velocity.magnitude;
+        if (unitValue == 0)
+        {
+            newInputValue = newInputValue * 3600 / 1000;
+        }
+
+        _speedInput.text = newInputValue.ToString();
+    }
+
+
+    public static void updateSelectedCelestialBodySpeed()
+    {
+        if (!_selectedBody) return;
+        OnChangeSpeedUnitInput(_speedUnitInput.value);
+    }
+
     public static void onWorldClick()
     {
         if (_lastClickTime != -1) return; // Wait for the release to trigger the click again
         _lastClickTime = Time.time;
-        
 
         if (_bodyPreSelection == null)
         {
@@ -66,6 +202,12 @@ public static class UIBodySelection
 
     public static void onWorldClickRelease()
     {
+        if (_shouldIgnoreWorldClicks || _massInput.isFocused || _speedInput.isFocused || GameObject.Find("Blocker") != null)
+        {
+            _shouldIgnoreWorldClicks = false;
+            _lastClickTime = -1;
+            return;
+        }
         if (Time.time - _lastClickTime >= 0.15) // Not a valid click, considered a drag
         {
             _lastClickTime = -1;
@@ -81,6 +223,7 @@ public static class UIBodySelection
                 return;
             } 
         }
+
         if (worldHits.Length == 0)
         {
             if (_selectedBody != null)
@@ -123,6 +266,13 @@ public static class UIBodySelection
         _selectedBody = celestialBody;
         _selectedBodyScript = celestialBody.GetComponent<CelestialBodyScript>();
         _selectedBodyScript.SelectedIndicator.SetActive(true);
+        if (_selectedBodyScript.velocity.magnitude > 0 )
+        {
+            _selectedBodyScript.DirectionArrow.SetActive(true);
+        } else
+        {
+            _selectedBodyScript.DirectionArrow.SetActive(false);
+        }
         _selectedBodyScript.DirectionArrowAxisRenderer.enabled = true;
         _selectedBodyScript.DirectionArrowBoxCollider.enabled = true;
         _selectedBodyScript.isSelected = true;
@@ -130,6 +280,8 @@ public static class UIBodySelection
         _bodyPreSelectionTime = 0;
         _selectedBody.GetComponent<SpriteRenderer>().sortingOrder = 3;
         _selectedBodyScript.SelectedIndicator.GetComponent<SpriteRenderer>().sortingOrder = 2;
+        _celestialBodyInputsContainer.SetActive(true);
+        fillCelestialBodyInputs();
     }
 
     private static void _clearBodySelection()
@@ -142,6 +294,8 @@ public static class UIBodySelection
         _selectedBodyScript.isSelected = false;
         _selectedBodyScript = null;
         _selectedBody = null;
+        _celestialBodyInputsContainer.SetActive(false);
     }
+
 
 }

@@ -2,12 +2,17 @@ using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.EventSystems;
 
 public class PhysicsUtils : MonoBehaviour
 {
     public static float BIG_G = 6.6743e-11f;
     public static int timeWarp = 1;
     public static bool isPaused = true;
+
+    public static float earthMass = 5.9722f * Mathf.Pow(10, 24);
+    public static float moonMass = 7.3476f * Mathf.Pow(10, 22);
+    public static float sunMass = 1.9884f * Mathf.Pow(10, 30);
 
     public static Vector2 getGravityAcceleration(CelestialBodyScript fromBody, CelestialBodyScript toBody)
     {

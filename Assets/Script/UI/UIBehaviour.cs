@@ -35,6 +35,12 @@ public class UIBehaviour : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     public Sprite selectedTimeWarpSprite;
     public Sprite unselectedTimeWarpSprite;
 
+    public GameObject celestialBodyInputsContainer;
+    public TMP_InputField massInput;
+    public TMP_Dropdown massUnitInput;
+    public TMP_InputField speedInput;
+    public TMP_Dropdown speedUnitInput;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -42,6 +48,7 @@ public class UIBehaviour : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
 
         FPSIndicator.setUp(fpsText);
         UIUnitsConverter.setUp(mainCamera);
+        UIBodySelection.setUp(massInput, massUnitInput, speedInput, speedUnitInput, celestialBodyInputsContainer);
     }
 
     // Update is called once per frame
@@ -114,6 +121,7 @@ public class UIBehaviour : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
     {
         mouseDownUITarget = eventData.pointerCurrentRaycast.gameObject;
 
+
         if (mouseDownUITarget.name == "AddBodyContainer")
         {
             mouseDownUITarget.SetActive(false);
@@ -158,6 +166,24 @@ public class UIBehaviour : MonoBehaviour, IPointerDownHandler, IPointerUpHandler
         {
             int newTimeWarp = 2000;
             updateTimeWarpImages(5);
+            updateTimeWarpValue(newTimeWarp);
+        }
+        else if (mouseDownUITarget.name == "accl_7")
+        {
+            int newTimeWarp = 10_000;
+            updateTimeWarpImages(6);
+            updateTimeWarpValue(newTimeWarp);
+        }
+        else if (mouseDownUITarget.name == "accl_8")
+        {
+            int newTimeWarp = 30_000;
+            updateTimeWarpImages(7);
+            updateTimeWarpValue(newTimeWarp);
+        }
+        else if (mouseDownUITarget.name == "accl_9")
+        {
+            int newTimeWarp = 60_000;
+            updateTimeWarpImages(8);
             updateTimeWarpValue(newTimeWarp);
         }
     }

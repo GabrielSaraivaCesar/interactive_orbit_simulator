@@ -28,7 +28,8 @@ public class CameraBehaviour : MonoBehaviour
     {
         Vector3 mousePos = UIUnitsConverter.UiPosToWorldPos(Input.mousePosition);
         Vector3 mouseMetricPos = unitsToMeters(mousePos);
-        float delta = (Input.mouseScrollDelta.y * -1 * zoomSpped) * Time.deltaTime;
+        float delta = (Input.mouseScrollDelta.y * -1 * zoomSpped * (unitsToMetersMultiplier / 12_742_000.0f / 5)) * Time.deltaTime;
+        
         unitsToMetersMultiplier += delta;
         if (unitsToMetersMultiplier < 2000000)
         {
